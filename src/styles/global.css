@@ -10,8 +10,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Inter", sans-serif;
-  background-color: var(--bg-light);
-  color: var(--primary);
+  background-color: #020617;
+  color: #e5e7eb;
   line-height: 1.6;
 }
 
@@ -30,19 +30,22 @@ body {
 
 /* Komponenty */
 .btn-primary {
-  background-color: var(--primary);
-  color: var(--text-white);
+  background: linear-gradient(135deg, #ff7f11, #f59e0b);
+  color: #0b1020;
   border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
-  font-weight: bold;
+  padding: 13px 26px;
+  border-radius: 999px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.45);
+  font-size: 0.95rem;
 }
 
 .btn-primary:hover {
-  background-color: var(--accent);
-  color: var(--primary);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
 }
 
 .card {
