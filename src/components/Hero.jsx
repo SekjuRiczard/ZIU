@@ -7,7 +7,7 @@ const HeroSection = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: linear-gradient(135deg, #262626 0%, #3d3d3d 100%);
   color: white;
   text-align: center;
   padding: 60px 20px;

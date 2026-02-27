@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const TestimonialsSection = styled.section`
   padding: 100px 20px;
-  background-color: #ffffff;
+  background-color: #ACBFA4;
 `;
 
 const Container = styled.div`
@@ -15,14 +15,14 @@ const SectionTitle = styled.h2`
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 20px;
-  color: #1a1a1a;
+  color: #262626;
   font-weight: 700;
 `;
 
 const SectionSubtitle = styled.p`
   text-align: center;
   font-size: 1.1rem;
-  color: #666;
+  color: #404040;
   margin-bottom: 60px;
   max-width: 600px;
   margin-left: auto;
@@ -36,7 +36,7 @@ const TestimonialsGrid = styled.div`
 `;
 
 const TestimonialCard = styled.div`
-  background: #f8f9fa;
+  background: white;
   padding: 40px 30px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
@@ -50,21 +50,21 @@ const TestimonialCard = styled.div`
 const Quote = styled.p`
   font-size: 1.1rem;
   line-height: 1.7;
-  color: #333;
+  color: #262626;
   margin-bottom: 25px;
   font-style: italic;
 
   &::before {
     content: """;
     font-size: 2rem;
-    color: #ff6b35;
+    color: #FF7F11;
     margin-right: 5px;
   }
 
   &::after {
     content: """;
     font-size: 2rem;
-    color: #ff6b35;
+    color: #FF7F11;
     margin-left: 5px;
   }
 `;
@@ -79,7 +79,7 @@ const Avatar = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  background: linear-gradient(135deg, #FF7F11 0%, #F7931E 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,14 +93,14 @@ const AuthorDetails = styled.div``;
 const AuthorName = styled.h4`
   margin: 0;
   font-size: 1.1rem;
-  color: #1a1a1a;
+  color: #262626;
   font-weight: 600;
 `;
 
 const AuthorRole = styled.p`
   margin: 5px 0 0 0;
   font-size: 0.9rem;
-  color: #666;
+  color: #404040;
 `;
 
 const Testimonials = () => {

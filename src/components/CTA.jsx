@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const CTASection = styled.section`
   padding: 100px 20px;
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  background: linear-gradient(135deg, #FF7F11 0%, #F7931E 100%);
   color: white;
   text-align: center;
 `;
@@ -40,7 +40,7 @@ const Input = styled.input`
   border-radius: 8px;
   font-size: 1rem;
   background: white;
-  color: #333;
+  color: #262626;
   transition: box-shadow 0.3s ease;
 
   &:focus {
@@ -54,7 +54,7 @@ const Input = styled.input`
 `;
 
 const SubmitButton = styled.button`
-  background-color: #1a1a1a;
+  background-color: #262626;
   color: white;
   border: none;
   padding: 16px 40px;
@@ -67,7 +67,7 @@ const SubmitButton = styled.button`
     background-color 0.2s;
 
   &:hover {
-    background-color: #2d2d2d;
+    background-color: #3d3d3d;
     transform: scale(1.02);
   }
 

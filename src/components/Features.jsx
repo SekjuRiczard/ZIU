@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const FeaturesSection = styled.section`
   padding: 100px 20px;
-  background-color: #f8f9fa;
+  background-color: #E2E8CE;
 `;
 
 const Container = styled.div`
@@ -15,14 +15,14 @@ const SectionTitle = styled.h2`
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 20px;
-  color: #1a1a1a;
+  color: #262626;
   font-weight: 700;
 `;
 
 const SectionSubtitle = styled.p`
   text-align: center;
   font-size: 1.1rem;
-  color: #666;
+  color: #404040;
   margin-bottom: 60px;
   max-width: 600px;
   margin-left: auto;
@@ -42,6 +42,7 @@ const FeatureCard = styled.div`
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-top: 4px solid #FF7F11;
 
   &:hover {
     transform: translateY(-8px);
@@ -57,12 +58,12 @@ const FeatureIcon = styled.div`
 const FeatureTitle = styled.h3`
   font-size: 1.5rem;
   margin-bottom: 15px;
-  color: #1a1a1a;
+  color: #262626;
   font-weight: 600;
 `;
 
 const FeatureDescription = styled.p`
-  color: #666;
+  color: #404040;
   line-height: 1.6;
   font-size: 1rem;
 `;
