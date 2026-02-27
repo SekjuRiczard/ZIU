@@ -2,21 +2,21 @@ import React from "react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-
   return (
     <footer
+      className="text-center"
       style={{
-        marginTop: "auto",
-        padding: "20px",
-        textAlign: "center",
-        backgroundColor: "#f8f9fa",
-        borderTop: "1px solid #e7e7e7",
+        padding: "40px 0",
+        backgroundColor: "var(--primary)",
+        color: "white",
       }}
     >
-      <p>
-        &copy; {currentYear} - Zaawansowany Interfejs Użytkownika. Wszelkie
-        prawa zastrzeżone.
-      </p>
+      <div className="container">
+        <p>
+          &copy; {currentYear} - Zaawansowany Interfejs Użytkownika. Wszelkie
+          prawa zastrzeżone.
+        </p>
+      </div>
     </footer>
   );
 };

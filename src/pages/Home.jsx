@@ -1,18 +1,22 @@
 import React from "react";
+import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Features from "../components/Features";
-import Testimonials from "../components/Testimonials";
 import Products from "../components/Products";
+import Testimonials from "../components/Testimonials";
 import CTA from "../components/CTA";
+import Footer from "../components/Footer";
 
 const Home = () => {
   return (
-    <div>
+    <div style={{ backgroundColor: "#E2E8CE" }}>
+      <Header />
       <Hero />
       <Features />
-      <Testimonials />
       <Products />
+      <Testimonials />
       <CTA />
+      <Footer />
     </div>
   );
 };
