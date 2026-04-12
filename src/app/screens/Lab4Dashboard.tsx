@@ -13,7 +13,10 @@ import { TodoList } from '../components/todo/TodoList';
 export function Lab4Dashboard() {
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
-  const { activeTodosCount, todos } = useTodos();
+  const { activeTodosCount, todos, filter, dispatch } = useTodos();
+
+  const handleToggle = (id: string) => dispatch({ type: 'TOGGLE', payload: id });
+  const handleDelete = (id: string) => dispatch({ type: 'DELETE', payload: id });
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-background)]">
@@ -85,7 +88,12 @@ export function Lab4Dashboard() {
         </div>
 
         {/* TodoList - mapuje zadania na TodoItem */}
-        <TodoList />
+        <TodoList
+          todos={todos}
+          filter={filter}
+          onToggle={handleToggle}
+          onDelete={handleDelete}
+        />
 
         {/* Floating Action Button - przycisk dodawania */}
         <motion.button

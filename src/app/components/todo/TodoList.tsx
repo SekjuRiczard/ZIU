@@ -1,41 +1,92 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle2 } from 'lucide-react';
-import { TodoItem } from './TodoItem';
-import { useTodos } from '../../context/TodoContext';
+import React, { useMemo } from "react";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Checkbox,
+  IconButton,
+  Typography,
+  Paper,
+  Chip,
+} from "@mui/material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Todo, FilterType } from "../../types/todo";
 
-// Komponent zgodny z Lab 4 - mapuje listę zadań na komponenty TodoItem
+interface TodoListProps {
+  todos: Todo[];
+  filter?: FilterType;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
 
-export function TodoList() {
-  const { filteredTodos } = useTodos();
+export function TodoList({ todos, filter = "all", onToggle, onDelete }: TodoListProps) {
+  const filteredTodos = useMemo(() => {
+    switch (filter) {
+      case "active":
+        return todos.filter((todo) => !todo.completed);
+      case "completed":
+        return todos.filter((todo) => todo.completed);
+      case "all":
+      default:
+        return todos;
+    }
+  }, [todos, filter]);
 
   if (filteredTodos.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center py-[80px]"
-      >
-        <div className="w-[120px] h-[120px] mx-auto mb-[24px] rounded-full bg-[var(--color-muted)] flex items-center justify-center">
-          <CheckCircle2 size={48} className="text-[var(--color-text-secondary)]" />
-        </div>
-        <h3 className="text-[var(--color-text-primary)] mb-[8px]">
-          Brak zadań
-        </h3>
-        <p className="text-[var(--color-text-secondary)]">
-          Dodaj nowe zadanie, aby rozpocząć
-        </p>
-      </motion.div>
+      <Typography variant="body1" sx={{ textAlign: "center", mt: 4, color: "text.secondary" }}>
+        Brak zadań. Dodaj pierwsze!
+      </Typography>
     );
   }
 
   return (
-    <div className="space-y-[16px]">
-      <AnimatePresence mode="popLayout">
+    <Paper elevation={2}>
+      <List>
         {filteredTodos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
+          <ListItem
+            key={todo.id}
+            divider
+            secondaryAction={
+              <IconButton 
+                edge="end" 
+                aria-label="Usuń zadanie" 
+                onClick={() => onDelete(todo.id)}
+              >
+                <DeleteOutlineIcon color="error" />
+              </IconButton>
+            }
+          >
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={todo.completed}
+                onChange={() => onToggle(todo.id)}
+                inputProps={{ "aria-label": todo.text }}
+              />
+            </ListItemIcon>
+            
+            <ListItemText
+              primary={todo.text}
+              sx={{
+                textDecoration: todo.completed ? "line-through" : "none",
+                color: todo.completed ? "text.disabled" : "text.primary",
+              }}
+            />
+
+            {todo.completed && (
+              <Chip 
+                label="Gotowe" 
+                size="small" 
+                color="success" 
+                variant="outlined" 
+                sx={{ mr: 1 }} 
+              />
+            )}
+          </ListItem>
         ))}
-      </AnimatePresence>
-    </div>
+      </List>
+    </Paper>
   );
 }

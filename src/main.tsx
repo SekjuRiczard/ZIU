@@ -1,7 +1,21 @@
-
-  import { createRoot } from "react-dom/client";
-  import App from "./app/App.tsx";
-  import "./styles/index.css";
-
-  createRoot(document.getElementById("root")!).render(<App />);
+import { createRoot } from "react-dom/client";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import App from "./app/App.tsx";
+import "./styles/index.css";
+import ReactDOM from "react-dom/client";
+import React from "react";
+import { ThemeProvider, CssBaseline } from '@mui/material'; 
+import muiTheme from './theme/muiTheme'; 
+ 
+ReactDOM.createRoot(document.getElementById('root')!).render( 
+  <React.StrictMode> 
+    <ThemeProvider theme={muiTheme}> 
+      <CssBaseline /> 
+      <App /> 
+    </ThemeProvider> 
+  </React.StrictMode> 
+); 
   
