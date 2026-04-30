@@ -5,12 +5,12 @@ import { TaskDetails } from "./screens/TaskDetails";
 import { Lab4AddTask } from "./screens/Lab4AddTask";
 import { SettingsHiFi } from "./screens/SettingsHiFi";
 import { DesignSystem } from "./screens/DesignSystem";
-import { Lab4Docs } from "./screens/Lab4Docs";
+import { Dashboard } from "./screens/Dashboard";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Lab4Dashboard,
+    Component: Dashboard,
   },
   {
     path: "/todos",
@@ -31,13 +31,5 @@ export const router = createBrowserRouter([
   {
     path: "/settings",
     Component: SettingsHiFi,
-  },
-  {
-    path: "/design-system",
-    Component: DesignSystem,
-  },
-  {
-    path: "/lab4-docs",
-    Component: Lab4Docs,
   },
 ]);

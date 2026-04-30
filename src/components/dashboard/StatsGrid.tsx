@@ -1,46 +1,47 @@
-import { Grid } from '@mui/material';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import StatsCard from './StatsCard';
-import { useTodos } from '../../app/context/TodoContext';
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import StatsCard from "./StatsCard";
+import { useTodos } from "../../app/context/TodoContext";
 
 export default function StatsGrid() {
   const { todos } = useTodos();
 
   const total = todos.length;
-  const completed = todos.filter(todo => todo.completed).length;
+  const completed = todos.filter((todo) => todo.completed).length;
   const pending = total - completed;
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={4}>
+    <section aria-labelledby="stats-heading">
+      <h2 id="stats-heading" className="sr-only">
+        Statystyki zadań
+      </h2>
+
+      <div className="grid grid-cols-1 gap-[24px] sm:grid-cols-3">
         <StatsCard
           title="Wszystkie"
           value={total}
           icon={FormatListBulletedIcon}
-          color="#1976d2"
+          color="#1565c0"
           bgColor="#e3f2fd"
         />
-      </Grid>
-      <Grid item xs={12} sm={4}>
+
         <StatsCard
           title="Ukończone"
           value={completed}
           icon={CheckCircleIcon}
-          color="#388e3c"
+          color="#2e7d32"
           bgColor="#e8f5e9"
         />
-      </Grid>
-      <Grid item xs={12} sm={4}>
+
         <StatsCard
           title="Oczekujące"
           value={pending}
           icon={RadioButtonUncheckedIcon}
-          color="#f57c00"
+          color="#e65100"
           bgColor="#fff3e0"
         />
-      </Grid>
-    </Grid>
+      </div>
+    </section>
   );
 }
