@@ -1,16 +1,6 @@
 import React, { useMemo } from "react";
-import {
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Checkbox,
-  IconButton,
-  Typography,
-  Paper,
-  Chip,
-} from "@mui/material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { motion } from "motion/react";
+import { TodoItem } from "./TodoItem";
 import { Todo, FilterType } from "../../types/todo";
 
 interface TodoListProps {
@@ -20,7 +10,12 @@ interface TodoListProps {
   onDelete: (id: string) => void;
 }
 
-export function TodoList({ todos, filter = "all", onToggle, onDelete }: TodoListProps) {
+export function TodoList({
+  todos,
+  filter = "all",
+  onToggle,
+  onDelete,
+}: TodoListProps) {
   const filteredTodos = useMemo(() => {
     switch (filter) {
       case "active":
@@ -35,58 +30,37 @@ export function TodoList({ todos, filter = "all", onToggle, onDelete }: TodoList
 
   if (filteredTodos.length === 0) {
     return (
-      <Typography variant="body1" sx={{ textAlign: "center", mt: 4, color: "text.secondary" }}>
-        Brak zadań. Dodaj pierwsze!
-      </Typography>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center py-12"
+      >
+        <p
+          className="text-[var(--color-text-secondary)]"
+          style={{ fontSize: "var(--font-body)" }}
+        >
+          Brak zadań. Dodaj pierwsze!
+        </p>
+      </motion.div>
     );
   }
 
   return (
-    <Paper elevation={2}>
-      <List>
-        {filteredTodos.map((todo) => (
-          <ListItem
-            key={todo.id}
-            divider
-            secondaryAction={
-              <IconButton 
-                edge="end" 
-                aria-label="Usuń zadanie" 
-                onClick={() => onDelete(todo.id)}
-              >
-                <DeleteOutlineIcon color="error" />
-              </IconButton>
-            }
-          >
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={todo.completed}
-                onChange={() => onToggle(todo.id)}
-                inputProps={{ "aria-label": todo.text }}
-              />
-            </ListItemIcon>
-            
-            <ListItemText
-              primary={todo.text}
-              sx={{
-                textDecoration: todo.completed ? "line-through" : "none",
-                color: todo.completed ? "text.disabled" : "text.primary",
-              }}
-            />
-
-            {todo.completed && (
-              <Chip 
-                label="Gotowe" 
-                size="small" 
-                color="success" 
-                variant="outlined" 
-                sx={{ mr: 1 }} 
-              />
-            )}
-          </ListItem>
-        ))}
-      </List>
-    </Paper>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="task-grid-responsive"
+    >
+      {filteredTodos.map((todo, index) => (
+        <motion.div
+          key={todo.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.05 }}
+        >
+          <TodoItem todo={todo} />
+        </motion.div>
+      ))}
+    </motion.div>
   );
 }
