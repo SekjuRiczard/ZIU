@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Trash2, Edit2, Save, X, Calendar } from 'lucide-react';
-import { Todo } from '../../types/todo';
-import { useTodos } from '../../context/TodoContext';
-import { ButtonHiFi } from '../library/ButtonHiFi';
-
-// Komponent zgodny z Lab 4 - checkbox, przekreślony tekst, usuwanie, edycja
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import { Trash2, Edit2, Save, X, Calendar } from "lucide-react";
+import { Todo } from "../../types/todo";
+import { useTodos } from "../../context/TodoContext";
+import { ButtonHiFi } from "../library/ButtonHiFi";
 
 interface TodoItemProps {
   todo: Todo;
@@ -16,23 +14,20 @@ export function TodoItem({ todo }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
 
-  // TOGGLE - zmiana stanu completed
   const handleToggle = () => {
-    dispatch({ type: 'TOGGLE', payload: todo.id });
+    dispatch({ type: "TOGGLE", payload: todo.id });
   };
 
-  // DELETE - usunięcie zadania
   const handleDelete = () => {
-    if (confirm('Czy na pewno chcesz usunąć to zadanie?')) {
-      dispatch({ type: 'DELETE', payload: todo.id });
+    if (confirm("Czy na pewno chcesz usunąć to zadanie?")) {
+      dispatch({ type: "DELETE", payload: todo.id });
     }
   };
 
-  // EDIT - edycja tytułu zadania
   const handleSaveEdit = () => {
     if (editTitle.trim()) {
       dispatch({
-        type: 'EDIT',
+        type: "EDIT",
         payload: { id: todo.id, updates: { title: editTitle.trim() } },
       });
       setIsEditing(false);
@@ -45,52 +40,55 @@ export function TodoItem({ todo }: TodoItemProps) {
   };
 
   const priorityColors = {
-    low: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-    high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    low: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+    medium:
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+    high: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
   };
 
   const priorityLabels = {
-    low: 'Niski',
-    medium: 'Średni',
-    high: 'Wysoki',
+    low: "Niski",
+    medium: "Średni",
+    high: "Wysoki",
   };
 
   return (
-    <motion.div
+    <motion.article
       layout
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -100 }}
-      className="bg-[var(--color-surface-card)] rounded-[var(--radius-lg)] shadow-[var(--shadow-md)] p-[24px] border border-[var(--color-border)]"
+      className="w-full rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-card)] p-4 shadow-[var(--shadow-md)] sm:p-5 lg:p-6"
     >
-      <div className="flex items-start gap-[16px]">
-        {/* Checkbox */}
+      <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-4">
         <motion.input
           whileTap={{ scale: 0.9 }}
           type="checkbox"
           checked={todo.completed}
           onChange={handleToggle}
-          className="w-[24px] h-[24px] mt-[2px] cursor-pointer rounded-[6px] border-2 border-[var(--color-border)] accent-[var(--color-primary-default)]"
+          aria-label={`Oznacz zadanie "${todo.title}" jako ${
+            todo.completed ? "nieukończone" : "ukończone"
+          }`}
+          className="mt-1 min-h-[44px] min-w-[44px] cursor-pointer rounded-[6px] border-2 border-[var(--color-border)] accent-[var(--color-primary-default)]"
         />
 
-        {/* Treść zadania */}
-        <div className="flex-1">
+        <div className="min-w-0">
           {isEditing ? (
-            // Tryb edycji
-            <div className="space-y-[12px]">
+            <div className="space-y-3">
               <input
                 type="text"
+                aria-label={`Edytuj tytuł zadania ${todo.title}`}
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                className="w-full px-[12px] py-[8px] rounded-[var(--radius-lg)] bg-[var(--color-input-background)] border border-[var(--color-border)] text-[var(--color-text-primary)] focus:border-[var(--color-border-focus)] focus:outline-none"
+                className="min-h-[44px] w-full rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-input-background)] px-3 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-border-focus)] focus:outline-none"
                 autoFocus
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSaveEdit();
-                  if (e.key === 'Escape') handleCancelEdit();
+                  if (e.key === "Enter") handleSaveEdit();
+                  if (e.key === "Escape") handleCancelEdit();
                 }}
               />
-              <div className="flex gap-[8px]">
+
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 <ButtonHiFi
                   variant="primary"
                   size="small"
@@ -99,6 +97,7 @@ export function TodoItem({ todo }: TodoItemProps) {
                 >
                   Zapisz
                 </ButtonHiFi>
+
                 <ButtonHiFi
                   variant="secondary"
                   size="small"
@@ -110,21 +109,21 @@ export function TodoItem({ todo }: TodoItemProps) {
               </div>
             </div>
           ) : (
-            // Tryb wyświetlania
-            <>
-              <div className="flex items-start justify-between mb-[8px]">
-                <h4
-                  className={`flex-1 ${
+            <div className="min-w-0 space-y-3">
+              <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <h3
+                  className={`min-w-0 break-words ${
                     todo.completed
-                      ? 'line-through text-[var(--color-text-secondary)]'
-                      : 'text-[var(--color-text-primary)]'
+                      ? "line-through text-[var(--color-text-secondary)]"
+                      : "text-[var(--color-text-primary)]"
                   }`}
                 >
                   {todo.title}
-                </h4>
+                </h3>
+
                 {todo.priority && (
                   <span
-                    className={`px-[12px] py-[4px] rounded-[6px] text-[12px] font-medium ml-[12px] ${
+                    className={`w-fit shrink-0 rounded-[6px] px-3 py-1 text-[12px] font-medium ${
                       priorityColors[todo.priority]
                     }`}
                   >
@@ -134,55 +133,65 @@ export function TodoItem({ todo }: TodoItemProps) {
               </div>
 
               {todo.description && (
-                <p className="text-[var(--color-text-secondary)] body-2 mb-[12px]">
+                <p className="body-2 break-words text-[var(--color-text-secondary)]">
                   {todo.description}
                 </p>
               )}
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-[16px] text-[14px] text-[var(--color-text-secondary)]">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex min-w-0 flex-wrap items-center gap-2 text-[14px] text-[var(--color-text-secondary)] sm:gap-4">
                   {todo.dueDate && (
-                    <div className="flex items-center gap-[6px]">
-                      <Calendar size={16} />
-                      <span>{todo.dueDate}</span>
+                    <div className="flex min-h-[32px] min-w-0 items-center gap-2">
+                      <Calendar size={16} aria-hidden="true" />
+                      <span className="break-words">{todo.dueDate}</span>
                     </div>
                   )}
+
                   {todo.category && (
-                    <span className="px-[8px] py-[2px] bg-[var(--color-muted)] rounded-[4px] text-[12px]">
+                    <span className="max-w-full break-words rounded-[4px] bg-[var(--color-muted)] px-2 py-1 text-[12px]">
                       {todo.category}
                     </span>
                   )}
                 </div>
 
-                {/* Przyciski akcji */}
-                <div className="flex gap-[8px]">
+                <div className="flex shrink-0 items-center gap-2 self-start lg:self-center">
                   <motion.button
+                    type="button"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setIsEditing(true)}
-                    className="p-[8px] rounded-[var(--radius-lg)] hover:bg-[var(--color-muted)] transition-colors"
+                    className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[var(--radius-lg)] transition-colors hover:bg-[var(--color-muted)]"
+                    aria-label={`Edytuj zadanie ${todo.title}`}
                     title="Edytuj"
                   >
-                    <Edit2 size={16} className="text-[var(--color-text-secondary)]" />
+                    <Edit2
+                      size={16}
+                      className="text-[var(--color-text-secondary)]"
+                      aria-hidden="true"
+                    />
                   </motion.button>
+
                   <motion.button
+                    type="button"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={handleDelete}
-                    className="p-[8px] rounded-[var(--radius-lg)] hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[var(--radius-lg)] transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
+                    aria-label={`Usuń zadanie ${todo.title}`}
                     title="Usuń"
                   >
                     <Trash2
                       size={16}
                       className="text-[var(--color-semantic-error)]"
+                      aria-hidden="true"
                     />
                   </motion.button>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

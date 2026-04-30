@@ -1,146 +1,127 @@
-import React from "react";
-import { useNavigate } from "react-router";
 import { motion } from "motion/react";
-import { Settings, Moon, Sun, Plus } from "lucide-react";
-import { useTodos } from "../context/TodoContext";
-import { useTheme } from "../context/ThemeContext";
+import { useNavigate } from "react-router";
+import { Moon, Plus, Settings, Sun } from "lucide-react";
+
+import { AppLayout } from "../components/layout/AppLayout";
 import { FilterBar } from "../components/todo/FilterBar";
 import { TodoList } from "../components/todo/TodoList";
-import { AppLayout } from "../components/layout/AppLayout";
-
-// Główny komponent Dashboard zgodny z Lab 4
-// Używa Context API (TodoContext, ThemeContext) aby uniknąć props drilling
-// Mobile-first design z responsywną nawigacją i stylami
+import { useTheme } from "../context/ThemeContext";
+import { useTodos } from "../context/TodoContext";
+import StatsGrid from "../../components/dashboard/StatsGrid";
 
 export function Lab4Dashboard() {
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
   const { activeTodosCount, todos, filter, dispatch } = useTodos();
 
-  const handleToggle = (id: string) =>
+  const handleToggle = (id: string) => {
     dispatch({ type: "TOGGLE", payload: id });
-  const handleDelete = (id: string) =>
+  };
+
+  const handleDelete = (id: string) => {
     dispatch({ type: "DELETE", payload: id });
+  };
 
   return (
     <AppLayout>
-      {/* Header z licznikiem zadań - responsywny */}
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="bg-[var(--color-surface-card)] border-b border-[var(--color-border)] rounded-lg p-4 md:p-6 mb-6"
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1
-              className="text-[var(--color-text-primary)] mb-2"
-              style={{ fontSize: "var(--font-h1)" }}
-            >
-              Zarządzanie Zadaniami
-            </h1>
-            {/* Reaktywny licznik - odświeża się natychmiast po każdej zmianie */}
-            <p
-              className="text-[var(--color-text-secondary)]"
-              style={{ fontSize: "var(--font-body)" }}
-            >
-              Masz {activeTodosCount} aktywnych{" "}
-              {activeTodosCount === 1 ? "zadanie" : "zadań"} z {todos.length}{" "}
-              ogółem
-            </p>
-          </div>
+      <div className="min-h-screen bg-[var(--color-surface-background)] px-4 py-8 md:px-8 lg:px-12">
+        <div className="mx-auto w-full max-w-6xl">
+          <header className="mb-8 border-b border-[var(--color-border)] pb-6">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h1 className="text-[var(--color-text-primary)]">
+                  Zarządzanie Zadaniami
+                </h1>
 
-          <div className="flex items-center gap-3">
-            {/* Dark Mode Toggle */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={toggleTheme}
-              className="w-10 h-10 rounded-lg bg-[var(--color-surface-background)] flex items-center justify-center text-[var(--color-text-primary)] hover:bg-[var(--color-muted)] transition-colors"
-              title={isDark ? "Włącz tryb jasny" : "Włącz tryb ciemny"}
-            >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </motion.button>
-
-            {/* Settings */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/settings")}
-              className="w-10 h-10 rounded-lg bg-[var(--color-surface-background)] flex items-center justify-center text-[var(--color-text-primary)] hover:bg-[var(--color-muted)] transition-colors"
-              title="Ustawienia"
-            >
-              <Settings size={20} />
-            </motion.button>
-
-            {/* User Avatar - ukryty na małych ekranach */}
-            <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-[var(--color-border)]">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
-                JK
+                <p className="mt-2 text-[var(--color-text-secondary)]">
+                  Masz {activeTodosCount} aktywnych{" "}
+                  {activeTodosCount === 1 ? "zadanie" : "zadań"} z{" "}
+                  {todos.length} ogółem
+                </p>
               </div>
-              <div className="hidden md:block">
-                <div className="text-[var(--color-text-primary)] font-medium text-sm">
-                  Jan Kowalski
-                </div>
-                <div className="text-[var(--color-text-secondary)] text-xs">
-                  jan.kowalski@firma.pl
+
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-[var(--color-surface-card)] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-muted)]"
+                  aria-label={isDark ? "Włącz tryb jasny" : "Włącz tryb ciemny"}
+                  title={isDark ? "Włącz tryb jasny" : "Włącz tryb ciemny"}
+                >
+                  {isDark ? (
+                    <Sun size={20} aria-hidden="true" />
+                  ) : (
+                    <Moon size={20} aria-hidden="true" />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => navigate("/settings")}
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-[var(--color-surface-card)] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-muted)]"
+                  aria-label="Przejdź do ustawień"
+                  title="Ustawienia"
+                >
+                  <Settings size={20} aria-hidden="true" />
+                </button>
+
+                <div className="hidden h-10 w-px bg-[var(--color-border)] md:block" />
+
+                <div className="hidden items-center gap-3 md:flex">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary-default)] font-semibold text-white">
+                    JK
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-[var(--color-text-primary)]">
+                      Jan Kowalski
+                    </p>
+                    <p className="text-sm text-[var(--color-text-secondary)]">
+                      jan.kowalski@firma.pl
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </motion.header>
+          </header>
 
-      {/* FilterBar - wizualne wyróżnienie aktywnego stanu */}
-      <div className="mb-8">
-        <FilterBar />
+          <section className="mb-8">
+            <StatsGrid />
+          </section>
+
+          <section className="mb-8" aria-label="Filtrowanie zadań">
+            <FilterBar />
+          </section>
+
+          <section aria-labelledby="todo-list-heading">
+            <h2 id="todo-list-heading" className="sr-only">
+              Lista zadań
+            </h2>
+
+            <TodoList
+              todos={todos}
+              filter={filter}
+              onToggle={handleToggle}
+              onDelete={handleDelete}
+            />
+          </section>
+        </div>
       </div>
 
-      {/* TodoList - mapuje zadania na TodoItem z responsywnym grid */}
-      <TodoList
-        todos={todos}
-        filter={filter}
-        onToggle={handleToggle}
-        onDelete={handleDelete}
-      />
-
-      {/* Floating Action Button - przycisk dodawania, responsywny */}
       <motion.button
+        type="button"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => navigate("/add-task")}
-        className="fixed bottom-4 right-4 md:bottom-8 md:right-8 w-14 h-14 md:w-16 md:h-16 rounded-full bg-[var(--color-primary-default)] text-white flex items-center justify-center shadow-lg hover:bg-[var(--color-primary-hover)] transition-colors z-10"
+        className="fixed bottom-4 right-4 z-10 flex min-h-14 min-w-14 items-center justify-center rounded-full bg-[var(--color-primary-default)] text-white shadow-lg transition-colors hover:bg-[var(--color-primary-hover)] md:bottom-8 md:right-8 md:min-h-16 md:min-w-16"
+        aria-label="Dodaj nowe zadanie"
         title="Dodaj nowe zadanie"
       >
-        <Plus size={24} className="md:w-7 md:h-7" />
+        <Plus size={24} className="md:h-7 md:w-7" aria-hidden="true" />
       </motion.button>
-
-      {/* Linki do Design System - ukryte na małych ekranach */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="hidden md:flex fixed bottom-8 left-8 flex-col gap-3"
-      >
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate("/design-system")}
-          className="px-5 py-2.5 rounded-lg font-medium text-sm bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md hover:shadow-lg transition-all"
-        >
-          Design System
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate("/lab4-docs")}
-          className="px-5 py-2.5 rounded-lg font-medium text-sm bg-gradient-to-r from-green-500 to-teal-600 text-white shadow-md hover:shadow-lg transition-all"
-        >
-          Lab 4 - Dokumentacja
-        </motion.button>
-      </motion.div>
     </AppLayout>
   );
 }

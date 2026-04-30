@@ -1,8 +1,13 @@
-import React, { createContext, useContext, useReducer, useMemo } from 'react';
-import { Todo, TodoAction, FilterType } from '../types/todo';
-import { todoReducer } from '../reducers/todoReducer';
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 
-// Context API zgodnie z Lab 4 - unikanie props drilling
+import { todoReducer } from "../reducers/todoReducer";
+import { FilterType, Todo, TodoAction } from "../types/todo";
 
 interface TodoContextType {
   todos: Todo[];
@@ -16,69 +21,68 @@ interface TodoContextType {
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
-// Początkowe dane (przykładowe zadania dla demonstracji)
 const initialTodos: Todo[] = [
   {
     id: crypto.randomUUID(),
-    title: 'Przygotować prezentację projektu',
-    description: 'Stworzyć slajdy zawierające wyniki badań, analizę konkurencji oraz roadmap produktu.',
+    title: "Przygotować prezentację projektu",
+    description:
+      "Stworzyć slajdy zawierające wyniki badań, analizę konkurencji oraz roadmap produktu.",
     completed: false,
-    createdAt: new Date('2026-03-15'),
-    priority: 'high',
-    dueDate: '2026-03-25',
-    category: 'Projekt',
+    createdAt: new Date("2026-03-15"),
+    priority: "high",
+    dueDate: "2026-03-25",
+    category: "Projekt",
   },
   {
     id: crypto.randomUUID(),
-    title: 'Code review dla modułu autoryzacji',
-    description: 'Sprawdzić implementację JWT, walidacji tokenów oraz obsługi sesji użytkowników.',
+    title: "Code review dla modułu autoryzacji",
+    description:
+      "Sprawdzić implementację JWT, walidacji tokenów oraz obsługi sesji użytkowników.",
     completed: false,
-    createdAt: new Date('2026-03-16'),
-    priority: 'high',
-    dueDate: '2026-03-22',
-    category: 'Development',
+    createdAt: new Date("2026-03-16"),
+    priority: "high",
+    dueDate: "2026-03-22",
+    category: "Development",
   },
   {
     id: crypto.randomUUID(),
-    title: 'Aktualizacja dokumentacji API',
-    description: 'Zaktualizować dokumentację Swagger o nowe endpointy.',
+    title: "Aktualizacja dokumentacji API",
+    description: "Zaktualizować dokumentację Swagger o nowe endpointy.",
     completed: true,
-    createdAt: new Date('2026-03-14'),
-    priority: 'medium',
-    dueDate: '2026-03-20',
-    category: 'Dokumentacja',
+    createdAt: new Date("2026-03-14"),
+    priority: "medium",
+    dueDate: "2026-03-20",
+    category: "Dokumentacja",
   },
 ];
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todos, dispatch] = useReducer(todoReducer, initialTodos);
-  const [filter, setFilter] = React.useState<FilterType>('all');
+  const [filter, setFilter] = useState<FilterType>("all");
 
-  // Logika filtrowania z useMemo dla optymalizacji
   const filteredTodos = useMemo(() => {
     switch (filter) {
-      case 'active':
-        return todos.filter(todo => !todo.completed);
-      case 'completed':
-        return todos.filter(todo => todo.completed);
-      case 'all':
+      case "active":
+        return todos.filter((todo) => !todo.completed);
+      case "completed":
+        return todos.filter((todo) => todo.completed);
+      case "all":
       default:
         return todos;
     }
   }, [todos, filter]);
 
-  // Liczniki zadań (reaktywne)
   const activeTodosCount = useMemo(
-    () => todos.filter(todo => !todo.completed).length,
-    [todos]
+    () => todos.filter((todo) => !todo.completed).length,
+    [todos],
   );
 
   const completedTodosCount = useMemo(
-    () => todos.filter(todo => todo.completed).length,
-    [todos]
+    () => todos.filter((todo) => todo.completed).length,
+    [todos],
   );
 
-  const value = {
+  const value: TodoContextType = {
     todos,
     dispatch,
     filter,
@@ -93,8 +97,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
 export function useTodos() {
   const context = useContext(TodoContext);
+
   if (!context) {
-    throw new Error('useTodos must be used within TodoProvider');
+    throw new Error("useTodos must be used within TodoProvider");
   }
+
   return context;
 }

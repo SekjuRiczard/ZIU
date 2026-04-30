@@ -4,13 +4,11 @@ import { FilterSort } from "./screens/FilterSort";
 import { TaskDetails } from "./screens/TaskDetails";
 import { Lab4AddTask } from "./screens/Lab4AddTask";
 import { SettingsHiFi } from "./screens/SettingsHiFi";
-import { DesignSystem } from "./screens/DesignSystem";
-import { Dashboard } from "./screens/Dashboard";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Dashboard,
+    Component: Lab4Dashboard,
   },
   {
     path: "/todos",

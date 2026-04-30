@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Plus } from 'lucide-react';
-import { useTodos } from '../../context/TodoContext';
-import { ButtonHiFi } from '../library/ButtonHiFi';
-import { InputHiFi } from '../library/InputHiFi';
-
-// Komponent zgodny z Lab 4 - lokalny stan, walidacja, reset po dodaniu
+import React, { useId, useState } from "react";
+import { motion } from "motion/react";
+import { Plus } from "lucide-react";
+import { useTodos } from "../../context/TodoContext";
+import { ButtonHiFi } from "../library/ButtonHiFi";
+import { InputHiFi } from "../library/InputHiFi";
 
 interface AddTodoFormProps {
   onSuccess?: () => void;
@@ -13,48 +11,56 @@ interface AddTodoFormProps {
 
 export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
   const { dispatch } = useTodos();
-  
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
-  const [category, setCategory] = useState('');
-  
-  const [errors, setErrors] = useState<{ title?: string; dueDate?: string }>({});
-  const [touched, setTouched] = useState<{ title?: boolean; dueDate?: boolean }>({});
+  const descriptionId = useId();
 
-  // Walidacja pustego pola
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
+  const [category, setCategory] = useState("");
+
+  const [errors, setErrors] = useState<{ title?: string; dueDate?: string }>(
+    {},
+  );
+
+  const [touched, setTouched] = useState<{
+    title?: boolean;
+    dueDate?: boolean;
+  }>({});
+
   const validateTitle = (value: string): string => {
     if (!value.trim()) {
-      return 'Tytuł zadania jest wymagany';
+      return "Tytuł zadania jest wymagany";
     }
+
     if (value.trim().length < 3) {
-      return 'Tytuł musi mieć minimum 3 znaki';
+      return "Tytuł musi mieć minimum 3 znaki";
     }
-    return '';
+
+    return "";
   };
 
   const handleTitleBlur = () => {
-    setTouched({ ...touched, title: true });
-    const error = validateTitle(title);
-    setErrors({ ...errors, title: error });
+    setTouched((previousTouched) => ({ ...previousTouched, title: true }));
+    setErrors((previousErrors) => ({
+      ...previousErrors,
+      title: validateTitle(title),
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Walidacja przed dodaniem
     const titleError = validateTitle(title);
-    
+
     if (titleError) {
       setErrors({ title: titleError });
       setTouched({ title: true, dueDate: true });
       return;
     }
 
-    // Dodanie zadania przez reducer (akcja ADD)
     dispatch({
-      type: 'ADD',
+      type: "ADD",
       payload: {
         title: title.trim(),
         description: description.trim(),
@@ -64,19 +70,15 @@ export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
       },
     });
 
-    // Reset formularza po dodaniu
-    setTitle('');
-    setDescription('');
-    setDueDate('');
-    setPriority('medium');
-    setCategory('');
+    setTitle("");
+    setDescription("");
+    setDueDate("");
+    setPriority("medium");
+    setCategory("");
     setErrors({});
     setTouched({});
 
-    // Callback sukcesu (opcjonalny)
-    if (onSuccess) {
-      onSuccess();
-    }
+    onSuccess?.();
   };
 
   return (
@@ -85,35 +87,37 @@ export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.1 }}
       onSubmit={handleSubmit}
-      className="bg-[var(--color-surface-card)] rounded-[var(--radius-lg)] shadow-[var(--shadow-md)] p-[40px]"
+      className="w-full rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-card)] p-4 shadow-[var(--shadow-md)] sm:p-6 lg:p-10"
     >
-      <div className="space-y-[24px]">
-        {/* Tytuł - pole wymagane */}
+      <div className="space-y-6">
         <InputHiFi
           label="Tytuł zadania *"
           placeholder="np. Przygotować prezentację projektu"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onBlur={handleTitleBlur}
-          error={touched.title ? errors.title : ''}
+          error={touched.title ? errors.title : ""}
           required
         />
 
-        {/* Opis */}
         <div>
-          <label className="block mb-[8px] text-[var(--color-text-primary)]">
+          <label
+            htmlFor={descriptionId}
+            className="mb-2 block text-[var(--color-text-primary)]"
+          >
             Opis zadania
           </label>
+
           <textarea
-            className="w-full px-[16px] py-[12px] min-h-[120px] rounded-[var(--radius-lg)] bg-[var(--color-input-background)] border border-[var(--color-border)] text-[var(--color-text-primary)] focus:border-[var(--color-border-focus)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(30,64,175,0.1)] transition-all resize-none"
+            id={descriptionId}
+            className="min-h-[140px] w-full resize-y rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-input-background)] px-4 py-3 text-[var(--color-text-primary)] transition-all placeholder:text-[var(--color-text-secondary)] focus:border-[var(--color-border-focus)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(30,64,175,0.1)]"
             placeholder="Szczegółowy opis zadania, kontekst i wymagania..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
-        {/* Data i kategoria */}
-        <div className="grid grid-cols-2 gap-[24px]">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <InputHiFi
             label="Termin wykonania"
             type="date"
@@ -129,21 +133,21 @@ export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
           />
         </div>
 
-        {/* Priorytet */}
-        <div>
-          <label className="block mb-[16px] text-[var(--color-text-primary)]">
+        <fieldset>
+          <legend className="mb-4 block text-[var(--color-text-primary)]">
             Priorytet *
-          </label>
-          <div className="flex gap-[16px]">
+          </legend>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {[
-              { value: 'low' as const, label: 'Niski' },
-              { value: 'medium' as const, label: 'Średni' },
-              { value: 'high' as const, label: 'Wysoki' },
+              { value: "low" as const, label: "Niski" },
+              { value: "medium" as const, label: "Średni" },
+              { value: "high" as const, label: "Wysoki" },
             ].map((priorityOption) => (
               <motion.label
                 key={priorityOption.value}
                 whileHover={{ scale: 1.02 }}
-                className="flex-1 cursor-pointer"
+                className="min-w-0 cursor-pointer"
               >
                 <input
                   type="radio"
@@ -151,28 +155,34 @@ export function AddTodoForm({ onSuccess }: AddTodoFormProps) {
                   value={priorityOption.value}
                   checked={priority === priorityOption.value}
                   onChange={(e) =>
-                    setPriority(e.target.value as 'low' | 'medium' | 'high')
+                    setPriority(e.target.value as "low" | "medium" | "high")
                   }
-                  className="peer hidden"
+                  className="sr-only"
                 />
-                <div
-                  className={`px-[20px] py-[12px] rounded-[var(--radius-lg)] border-2 transition-all text-center ${
+
+                <span
+                  className={`flex min-h-[44px] w-full items-center justify-center rounded-[var(--radius-lg)] border-2 px-4 py-3 text-center transition-all ${
                     priority === priorityOption.value
-                      ? 'border-[var(--color-primary-default)] bg-[var(--color-primary-default)] text-white'
-                      : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary-default)]'
+                      ? "border-[var(--color-primary-default)] bg-[var(--color-primary-default)] text-white"
+                      : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary-default)]"
                   }`}
                 >
                   {priorityOption.label}
-                </div>
+                </span>
               </motion.label>
             ))}
           </div>
-        </div>
+        </fieldset>
       </div>
 
-      {/* Przycisk dodawania */}
-      <div className="flex justify-end mt-[40px] pt-[32px] border-t border-[var(--color-border)]">
-        <ButtonHiFi type="submit" variant="primary" size="medium" icon={Plus}>
+      <div className="mt-8 flex flex-col border-t border-[var(--color-border)] pt-6 sm:items-end">
+        <ButtonHiFi
+          type="submit"
+          variant="primary"
+          size="medium"
+          icon={Plus}
+          className="w-full sm:w-auto"
+        >
           Dodaj zadanie
         </ButtonHiFi>
       </div>
