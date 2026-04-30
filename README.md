@@ -49,11 +49,11 @@ W ramach laboratorium 6 aplikacja została rozbudowana o pełną responsywność
 
 Responsywność aplikacji została sprawdzona dla kilku szerokości ekranu zgodnych z wymaganiami laboratorium.
 
-### Widok tabletowy – 768px
+### Widok mobilny – 768px
 
 ![Dashboard 768px](public/Dashboard_768.png)
 
-### Widok desktopowy – 1024px
+### Widok tabletowy – 1024px
 
 ![Dashboard 1024px](public/Dashboard_1024.png)
 
