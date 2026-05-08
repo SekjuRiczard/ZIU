@@ -1,312 +1,251 @@
-# Laboratorium 7 — Formularze i walidacja danych
+# Laboratorium 8 — Implementacja dostępności: ARIA i semantyczny HTML
 
-Projekt został rozszerzony o wieloetapowy formularz rejestracji wykonany w React z wykorzystaniem **React Hook Form**, **Zod** oraz zasad dostępności **WCAG 2.1 AA**.
+## Opis zadania
 
-Formularz jest dostępny pod trasą:
+Celem laboratorium było przeprowadzenie refaktoryzacji aplikacji z poprzednich laboratoriów pod kątem dostępności zgodnej z WCAG 2.1 AA. Zakres prac obejmował poprawę semantyki HTML, dodanie odpowiednich atrybutów ARIA, implementację skip linka, live regionu oraz focus trapu w modalu.
+
+Aplikacja została rozbudowana i poprawiona tak, aby była łatwiejsza w obsłudze dla użytkowników korzystających z klawiatury oraz technologii asystujących, takich jak czytniki ekranu.
+
+## Zakres wykonanych zmian
+
+### 1. Semantyczny HTML5
+
+W widokach aplikacji zastąpiono niesemantyczne kontenery bardziej odpowiednimi elementami HTML5.
+
+Zastosowano między innymi:
+
+- `main` jako główny obszar treści strony,
+- `header` jako nagłówek widoku,
+- `nav` dla ścieżek nawigacji i filtrów,
+- `section` dla logicznych sekcji strony,
+- `article` dla samodzielnych bloków treści,
+- `aside` dla informacji dodatkowych,
+- `footer` dla akcji formularzy i widoków,
+- `fieldset` oraz `legend` dla grup pól formularzy,
+- `dl`, `dt`, `dd` dla metadanych zadania.
+
+Dzięki temu struktura dokumentu jest czytelniejsza dla przeglądarki, czytników ekranu i narzędzi audytujących dostępność.
+
+### 2. Atrybuty ARIA
+
+Dodano atrybuty ARIA tam, gdzie sama semantyka HTML nie była wystarczająca.
+
+Zastosowano między innymi:
+
+- `aria-label` dla przycisków ikon i sekcji bez widocznego nagłówka,
+- `aria-labelledby` do powiązania sekcji z nagłówkami,
+- `aria-describedby` do powiązania pól i formularzy z opisami,
+- `aria-current="page"` dla aktywnego elementu breadcrumb,
+- `aria-current="step"` dla aktywnego kroku formularza rejestracji,
+- `aria-invalid` dla pól formularzy z błędami,
+- `aria-required` dla pól wymaganych,
+- `aria-hidden="true"` dla ikon dekoracyjnych,
+- `aria-modal="true"` i `role="dialog"` dla modala.
+
+Unikano nadmiarowego użycia ARIA tam, gdzie wystarczał natywny element HTML, np. `button`, `form`, `nav`, `header` lub `main`.
+
+### 3. Skip navigation link
+
+Dodano link pomijający nawigację:
+
+```tsx
+<a href="#main-content" className="skip-link">
+  Przejdź do treści głównej
+</a>
+```
+
+Link jest ukryty wizualnie w stanie domyślnym i pojawia się po otrzymaniu fokusu klawiaturowego. Po naciśnięciu `Enter` przenosi użytkownika do elementu:
+
+```tsx
+<main id="main-content" tabIndex={-1}>
+```
+
+Dzięki temu użytkownik korzystający z klawiatury może szybko przejść do właściwej treści strony.
+
+### 4. ARIA live region
+
+Dodano regiony statusu informujące czytniki ekranu o dynamicznych zmianach w aplikacji.
+
+Przykładowe zastosowania:
+
+- informowanie o liczbie wyników wyszukiwania i aktywnym filtrze w dashboardzie,
+- informowanie o zmianie kroku w formularzu rejestracji,
+- informowanie o sukcesie lub błędzie w ustawieniach profilu.
+
+Przykład:
+
+```tsx
+<p className="visually-hidden" role="status" aria-atomic="true">
+  {liveRegionMessage}
+</p>
+```
+
+Region jest ukryty wizualnie, ale dostępny dla czytników ekranu.
+
+### 5. Focus trap w modalu
+
+Dodano komponent `FocusTrap`, który utrzymuje fokus klawiaturowy wewnątrz modala.
+
+Zaimplementowane zachowania:
+
+- po otwarciu modala fokus trafia do pierwszego elementu interaktywnego,
+- `Tab` przechodzi po elementach wewnątrz modala,
+- `Shift + Tab` działa w odwrotnej kolejności,
+- fokus nie wychodzi poza modal,
+- `Escape` zamyka modal,
+- po zamknięciu fokus wraca do elementu, który otworzył modal.
+
+Modal został wykorzystany między innymi przy informacjach RODO w formularzu rejestracji.
+
+## Zmienione lub dodane elementy aplikacji
+
+### Komponenty dostępności
+
+Dodano:
 
 ```txt
-/registration
+src/app/components/accessibility/FocusTrap.tsx
+src/app/components/accessibility/ModalDialog.tsx
 ```
 
-## Cel zadania
+`FocusTrap.tsx` odpowiada za obsługę fokusu wewnątrz modala.
 
-Celem laboratorium było przygotowanie formularza rejestracyjnego podzielonego na 3 kroki, w którym dane są walidowane osobnymi schematami Zod, przechowywane pomiędzy krokami i wysyłane jednym żądaniem po potwierdzeniu w ostatnim kroku.
+`ModalDialog.tsx` odpowiada za semantyczną strukturę modala:
 
-W projekcie zaimplementowano:
+- `role="dialog"`,
+- `aria-modal="true"`,
+- `aria-labelledby`,
+- przycisk zamykania,
+- obsługę kliknięcia w tło.
 
-- formularz wieloetapowy,
-- walidację danych za pomocą Zod,
-- obsługę formularza przez React Hook Form,
-- wskaźnik siły hasła,
-- dynamiczne kategorie z `useFieldArray`,
-- checkboxy obsługiwane przez `Controller`,
-- obsługę błędów serwera przez `setError`,
-- podstawowe wymagania dostępności WCAG,
-- zachowanie danych przy przechodzeniu między krokami.
+### Formularz rejestracji
 
-## Użyte technologie
+W formularzu rejestracji z Lab 7 dodano i poprawiono:
 
-```txt
-React
-TypeScript
-React Hook Form
-Zod
-@hookform/resolvers
-CSS
+- `main id="main-content"`,
+- `aria-labelledby` dla głównego nagłówka,
+- live region informujący o aktualnym kroku,
+- aktywny krok z `aria-current="step"`,
+- semantyczne sekcje i pola formularza,
+- modal RODO z focus trapem,
+- poprawne komunikaty błędów z `role="alert"`.
+
+### Dashboard
+
+W dashboardzie poprawiono:
+
+- strukturę na `main`, `header`, `section`, `nav`, `ul`, `li`,
+- formularz wyszukiwania z `role="search"`,
+- ukrytą etykietę dla pola wyszukiwania,
+- `aria-controls` dla listy wyników,
+- live region ogłaszający liczbę znalezionych zadań,
+- przyciski ikon z `aria-label`,
+- ikony dekoracyjne z `aria-hidden="true"`,
+- aktywne filtry z `aria-pressed`.
+
+### Widoki formularzy i ustawień
+
+Poprawiono dostępność i semantykę w widokach:
+
+- dodawanie zadania,
+- dodawanie zadania HiFi,
+- ustawienia profilu,
+- filtrowanie i sortowanie,
+- szczegóły zadania,
+- szczegóły zadania HiFi.
+
+Wprowadzono:
+
+- `fieldset` i `legend` dla grup formularzy,
+- `nav` dla breadcrumbów,
+- `aria-current="page"` dla aktualnej strony,
+- `footer` dla akcji formularzy,
+- `role="status"` dla komunikatów,
+- dostępne przełączniki i przyciski ikon.
+
+## Klasy CSS dodane na potrzeby dostępności
+
+Dodano klasę do ukrywania treści wizualnie, ale pozostawiania jej dostępnej dla czytników ekranu:
+
+```css
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 ```
 
-## Struktura dodanej funkcjonalności
+Dodano również styl skip linka:
 
-Funkcjonalność rejestracji została wydzielona do osobnego modułu:
+```css
+.skip-link {
+  position: absolute;
+  top: -48px;
+  left: 12px;
+  z-index: 9999;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #0043ff;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+}
 
-```txt
-src/app/features/registration/
-  api/
-    registerUser.ts
-  components/
-    Form.css
-    Form.tsx
-    MultiStepRegistration.tsx
-    PersonalData.tsx
-    Preferences.tsx
-    Summary.tsx
-  schemas/
-    registrationSchemas.ts
-  types/
-  index.ts
+.skip-link:focus {
+  top: 12px;
+}
 ```
 
-Dodatkowo dodano ekran:
+## Testy manualne
 
-```txt
-src/app/screens/Registration.tsx
-```
+Aplikację należy sprawdzić wyłącznie za pomocą klawiatury.
 
-oraz trasę:
+### Skip link
 
-```txt
-/registration
-```
+- Po pierwszym naciśnięciu `Tab` pojawia się link „Przejdź do treści głównej”.
+- Po naciśnięciu `Enter` fokus przechodzi do `main id="main-content"`.
+- Link znika po utracie fokusu.
 
-## Krok 1 — Dane osobowe
+### Nawigacja klawiaturą
 
-Pierwszy krok formularza zbiera podstawowe dane użytkownika:
+- Wszystkie przyciski, linki i pola formularzy są dostępne przez `Tab`.
+- Kolejność fokusu odpowiada kolejności wizualnej.
+- Fokus jest widoczny na elementach interaktywnych.
+- Przyciski ikon mają nazwę dostępną przez `aria-label` albo widoczny tekst.
 
-- imię,
-- nazwisko,
-- adres e-mail,
-- hasło,
-- potwierdzenie hasła.
+### Wyszukiwanie i live region
 
-Dane są walidowane za pomocą schematu `step1Schema` z biblioteki Zod.
+- Pole wyszukiwania ma etykietę powiązaną przez `htmlFor`.
+- Po zmianie tekstu wyszukiwania aktualizuje się lista zadań.
+- Czytnik ekranu otrzymuje komunikat o liczbie znalezionych wyników.
 
-Zaimplementowane reguły walidacji:
+### Modal
 
-| Pole              | Reguła                                 |
-| ----------------- | -------------------------------------- |
-| `firstName`       | minimum 2 znaki                        |
-| `lastName`        | minimum 2 znaki                        |
-| `email`           | poprawny format adresu e-mail          |
-| `password`        | minimum 8 znaków, wielka litera, cyfra |
-| `confirmPassword` | zgodność z hasłem przez `refine()`     |
+- Otwarcie modala przenosi fokus do środka.
+- `Tab` i `Shift + Tab` krążą wyłącznie wewnątrz modala.
+- `Escape` zamyka modal.
+- Po zamknięciu fokus wraca do elementu otwierającego modal.
 
-Dodatkowo pod polem hasła wyświetlany jest wskaźnik siły hasła:
+## Testy automatyczne
 
-- słabe,
-- średnie,
-- silne.
+Do końcowej weryfikacji należy użyć:
 
-![Krok 1 — Dane osobowe](public/Dane.png)
+- Lighthouse w Chrome DevTools,
+- axe DevTools,
+- Accessibility Tree w Chrome DevTools.
 
-## Krok 2 — Preferencje
+Oczekiwane wyniki:
 
-Drugi krok formularza odpowiada za preferencje użytkownika.
+- Lighthouse Accessibility: minimum 90 punktów,
+- axe DevTools: brak błędów `critical` i `serious`,
+- każdy element interaktywny ma poprawne `Name`, `Role` i `State`.
 
-Zaimplementowano pola:
+## Podsumowanie
 
-- dynamiczna lista kategorii,
-- powiadomienia e-mail,
-- powiadomienia push,
-- newsletter.
-
-Kategorie są obsługiwane przez `useFieldArray`, dzięki czemu użytkownik może dodawać i usuwać pozycje. Formularz wymaga podania co najmniej jednej kategorii.
-
-Checkboxy powiadomień zostały obsłużone przez `Controller`, zgodnie z wymaganiami zadania.
-
-![Krok 2 — Preferencje](public/Preferencje.png)
-
-## Krok 3 — Podsumowanie i potwierdzenie
-
-Trzeci krok pokazuje podsumowanie danych zebranych w krokach 1 i 2.
-
-Na tym etapie użytkownik musi zaakceptować zgodę RODO. Dopiero po jej zaznaczeniu można wysłać formularz.
-
-Po kliknięciu przycisku `Zarejestruj się` dane są agregowane do jednego obiektu i przekazywane do funkcji `registerUser()`.
-
-![Krok 3 — Podsumowanie](public/Podsumowanie.png)
-
-## Obsługa błędów serwera
-
-W projekcie przygotowano mock funkcji `registerUser()`, który symuluje odpowiedzi serwera.
-
-### Błąd 409 — zajęty adres e-mail
-
-Jeżeli użytkownik wpisze adres:
-
-```txt
-test@test.pl
-```
-
-funkcja `registerUser()` zwraca symulowany błąd `409`.
-
-W takim przypadku formularz:
-
-1. wraca do kroku 1,
-2. ustawia błąd na polu `email` przez `setError`,
-3. wyświetla komunikat, że adres e-mail jest już zarejestrowany.
-
-![Mock błędu 409](public/test-mock-error.png)
-
-### Błąd 500 — błąd serwera
-
-Jeżeli użytkownik wpisze adres:
-
-```txt
-server@test.pl
-```
-
-funkcja `registerUser()` zwraca symulowany błąd `500`.
-
-W takim przypadku formularz pozostaje w kroku 3 i pokazuje ogólny błąd serwera ustawiony przez:
-
-```ts
-setError("root.serverError", {
-  type: "server",
-  message: "Błąd serwera, spróbuj ponownie później",
-});
-```
-
-![Mock błędu 500](public/500-error.png)
-
-## Dostępność WCAG
-
-W formularzu uwzględniono wymagania dostępności:
-
-- każde pole posiada `label` powiązany z `input`,
-- błędy są powiązane z polami przez `aria-describedby`,
-- błędne pola mają ustawiane `aria-invalid`,
-- komunikaty błędów używają `role="alert"`,
-- aktywny krok ma `aria-current="step"`,
-- po zmianie kroku focus przenosi się na nagłówek aktualnego kroku,
-- przyciski mają widoczny focus ring,
-- podczas wysyłania formularza przyciski mają `disabled` oraz `aria-busy`,
-- formularz nie opiera się wyłącznie na placeholderach.
-
-## Zachowanie danych między krokami
-
-Dane z kroków 1 i 2 są przechowywane w komponencie nadrzędnym `MultiStepRegistration`.
-
-Dzięki temu po przejściu do kolejnego kroku oraz powrocie do poprzedniego wpisane dane nie znikają.
-
-Do przechowywania danych użyto stanu:
-
-```ts
-const [formData, setFormData] = useState<FormDataState>({});
-```
-
-## Walidacja Zod i typowanie
-
-Każdy krok formularza posiada własny schemat walidacji:
-
-```txt
-step1Schema
-step2Schema
-step3Schema
-```
-
-Typy danych są generowane bezpośrednio ze schematów Zod przez:
-
-```ts
-z.infer<typeof schema>;
-```
-
-Dzięki temu typy formularza są spójne z regułami walidacji.
-
-## React Hook Form API
-
-W projekcie wykorzystano wymagane elementy API React Hook Form:
-
-| API             | Zastosowanie                              |
-| --------------- | ----------------------------------------- |
-| `useForm`       | obsługa każdego kroku formularza          |
-| `register`      | standardowe pola tekstowe i checkbox RODO |
-| `Controller`    | checkboxy powiadomień                     |
-| `useFieldArray` | dynamiczne kategorie                      |
-| `watch`         | wskaźnik siły hasła                       |
-| `setError`      | obsługa błędów serwera                    |
-| `handleSubmit`  | walidacja i wysyłka danych                |
-
-## Jak uruchomić projekt
-
-Instalacja zależności:
-
-```bash
-npm install
-```
-
-Uruchomienie aplikacji:
-
-```bash
-npm run dev
-```
-
-Następnie należy wejść w przeglądarce na trasę:
-
-```txt
-/registration
-```
-
-## Scenariusze testowe
-
-### Poprawna rejestracja
-
-Przykładowe dane:
-
-```txt
-Imię: Jan
-Nazwisko: Kowalski
-E-mail: jan@test.pl
-Hasło: Test1234
-Powtórz hasło: Test1234
-Kategoria: React
-RODO: zaznaczone
-```
-
-Efekt: formularz zostaje wysłany poprawnie, a użytkownik widzi komunikat o powodzeniu rejestracji.
-
-### Test błędu 409
-
-```txt
-E-mail: test@test.pl
-```
-
-Efekt: formularz wraca do kroku 1 i pokazuje błąd przy polu e-mail.
-
-### Test błędu 500
-
-```txt
-E-mail: server@test.pl
-```
-
-Efekt: formularz pozostaje w kroku 3 i pokazuje ogólny błąd serwera.
-
-### Test walidacji hasła
-
-Niepoprawne hasło:
-
-```txt
-test
-```
-
-Efekt: formularz pokazuje błędy dotyczące długości hasła, wielkiej litery i cyfry.
-
-Poprawne hasło:
-
-```txt
-Test1234
-```
-
-Efekt: hasło przechodzi walidację.
-
-## Podsumowanie wykonania
-
-W ramach zadania wykonano kompletny formularz rejestracji zgodny z wymaganiami laboratorium:
-
-- formularz ma 3 kroki,
-- dane są walidowane osobnymi schematami Zod,
-- dane nie znikają przy cofaniu,
-- submit odbywa się dopiero w kroku 3,
-- obsłużono błędy 409 i 500,
-- zastosowano wymagane elementy React Hook Form,
-- dodano podstawową dostępność WCAG,
-- dodano zrzuty ekranu prezentujące działanie formularza.
+W ramach Laboratorium 8 aplikacja została dostosowana do wymagań dostępności WCAG 2.1 AA. Poprawiono strukturę HTML, dodano atrybuty ARIA, wdrożono skip link, live regiony oraz dostępny modal z focus trapem. Aplikacja jest lepiej obsługiwana klawiaturą i bardziej czytelna dla technologii asystujących.

@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Button } from '../components/library/Button';
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { Button } from "../components/library/Button";
 
 export function FilterSort() {
   const navigate = useNavigate();
-  
+
   const [filters, setFilters] = useState({
     showActive: true,
     showCompleted: true,
     showOverdue: true,
     priorityLow: true,
     priorityMedium: true,
-    priorityHigh: true
+    priorityHigh: true,
   });
 
-  const [sortBy, setSortBy] = useState('dueDate');
+  const [sortBy, setSortBy] = useState("dueDate");
 
   const handleReset = () => {
     setFilters({
@@ -23,177 +23,231 @@ export function FilterSort() {
       showOverdue: true,
       priorityLow: true,
       priorityMedium: true,
-      priorityHigh: true
+      priorityHigh: true,
     });
-    setSortBy('dueDate');
+    setSortBy("dueDate");
   };
 
   const handleApply = () => {
-    console.log('Zastosowano filtry:', filters, 'Sortowanie:', sortBy);
-    navigate('/');
+    console.log("Zastosowano filtry:", filters, "Sortowanie:", sortBy);
+    navigate("/");
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      {/* Header */}
+    <main
+      id="main-content"
+      className="min-h-screen bg-[#FAFAFA]"
+      aria-labelledby="filter-sort-title"
+      tabIndex={-1}
+    >
       <header className="bg-white border-b border-[#E0E0E0]">
-        <div className="max-w-[1440px] mx-auto px-[80px] py-[24px]">
-          <h1 className="text-[#333333]">Filtrowanie i Sortowanie</h1>
-        </div>
+        <section className="max-w-[1440px] mx-auto px-[80px] py-[24px]">
+          <h1 id="filter-sort-title" className="text-[#333333]">
+            Filtrowanie i Sortowanie
+          </h1>
+        </section>
       </header>
 
-      <div className="max-w-[1440px] mx-auto px-[80px] py-[40px]">
-        {/* Breadcrumb */}
-        <div className="mb-[32px] flex items-center gap-[8px] text-[#999999]">
-          <span 
-            className="cursor-pointer hover:text-[#333333]"
-            onClick={() => navigate('/')}
+      <section
+        className="max-w-[1440px] mx-auto px-[80px] py-[40px]"
+        aria-label="Panel filtrowania i sortowania zadań"
+      >
+        <nav
+          className="mb-[32px] flex items-center gap-[8px] text-[#999999]"
+          aria-label="Ścieżka nawigacji"
+        >
+          <button
+            type="button"
+            className="cursor-pointer hover:text-[#333333] bg-transparent border-0 p-0 text-[#999999]"
+            onClick={() => navigate("/")}
           >
             Dashboard
+          </button>
+          <span aria-hidden="true">/</span>
+          <span className="text-[#333333]" aria-current="page">
+            Filtry
           </span>
-          <span>/</span>
-          <span className="text-[#333333]">Filtry</span>
-        </div>
+        </nav>
 
-        <div className="max-w-[800px]">
-          <div className="bg-white border border-[#E0E0E0] p-[40px]">
-            {/* Status Filters */}
-            <div className="mb-[40px] pb-[32px] border-b border-[#E0E0E0]">
-              <h3 className="mb-[24px] text-[#333333]">Status zadania</h3>
-              <div className="space-y-[16px]">
+        <article className="max-w-[800px]">
+          <form
+            className="bg-white border border-[#E0E0E0] p-[40px]"
+            aria-describedby="filter-sort-description"
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleApply();
+            }}
+          >
+            <p id="filter-sort-description" className="visually-hidden">
+              Formularz pozwala wybrać status, priorytet oraz sposób sortowania
+              listy zadań.
+            </p>
+
+            <fieldset className="mb-[40px] pb-[32px] border-0 border-b border-[#E0E0E0] p-0">
+              <legend className="mb-[24px] text-[#333333] font-semibold">
+                Status zadania
+              </legend>
+
+              <section className="space-y-[16px]" aria-label="Filtry statusu">
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="checkbox"
                     checked={filters.showActive}
-                    onChange={(e) => setFilters({ ...filters, showActive: e.target.checked })}
+                    onChange={(e) =>
+                      setFilters({ ...filters, showActive: e.target.checked })
+                    }
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Aktywne</span>
                 </label>
+
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="checkbox"
                     checked={filters.showCompleted}
-                    onChange={(e) => setFilters({ ...filters, showCompleted: e.target.checked })}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        showCompleted: e.target.checked,
+                      })
+                    }
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Ukończone</span>
                 </label>
+
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="checkbox"
                     checked={filters.showOverdue}
-                    onChange={(e) => setFilters({ ...filters, showOverdue: e.target.checked })}
+                    onChange={(e) =>
+                      setFilters({ ...filters, showOverdue: e.target.checked })
+                    }
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Przeterminowane</span>
                 </label>
-              </div>
-            </div>
+              </section>
+            </fieldset>
 
-            {/* Priority Filters */}
-            <div className="mb-[40px] pb-[32px] border-b border-[#E0E0E0]">
-              <h3 className="mb-[24px] text-[#333333]">Priorytet</h3>
-              <div className="space-y-[16px]">
+            <fieldset className="mb-[40px] pb-[32px] border-0 border-b border-[#E0E0E0] p-0">
+              <legend className="mb-[24px] text-[#333333] font-semibold">
+                Priorytet
+              </legend>
+
+              <section
+                className="space-y-[16px]"
+                aria-label="Filtry priorytetu"
+              >
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="checkbox"
                     checked={filters.priorityLow}
-                    onChange={(e) => setFilters({ ...filters, priorityLow: e.target.checked })}
+                    onChange={(e) =>
+                      setFilters({ ...filters, priorityLow: e.target.checked })
+                    }
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Niski</span>
                 </label>
+
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="checkbox"
                     checked={filters.priorityMedium}
-                    onChange={(e) => setFilters({ ...filters, priorityMedium: e.target.checked })}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        priorityMedium: e.target.checked,
+                      })
+                    }
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Średni</span>
                 </label>
+
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="checkbox"
                     checked={filters.priorityHigh}
-                    onChange={(e) => setFilters({ ...filters, priorityHigh: e.target.checked })}
+                    onChange={(e) =>
+                      setFilters({ ...filters, priorityHigh: e.target.checked })
+                    }
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Wysoki</span>
                 </label>
-              </div>
-            </div>
+              </section>
+            </fieldset>
 
-            {/* Sorting */}
-            <div className="mb-[40px]">
-              <h3 className="mb-[24px] text-[#333333]">Sortuj według</h3>
-              <div className="space-y-[16px]">
+            <fieldset className="mb-[40px] border-0 p-0">
+              <legend className="mb-[24px] text-[#333333] font-semibold">
+                Sortuj według
+              </legend>
+
+              <section className="space-y-[16px]" aria-label="Opcje sortowania">
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="radio"
                     name="sortBy"
                     value="dueDate"
-                    checked={sortBy === 'dueDate'}
+                    checked={sortBy === "dueDate"}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Data wykonania</span>
                 </label>
+
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="radio"
                     name="sortBy"
                     value="priority"
-                    checked={sortBy === 'priority'}
+                    checked={sortBy === "priority"}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Priorytet</span>
                 </label>
+
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="radio"
                     name="sortBy"
                     value="title"
-                    checked={sortBy === 'title'}
+                    checked={sortBy === "title"}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Nazwa (A-Z)</span>
                 </label>
+
                 <label className="flex items-center gap-[12px] cursor-pointer">
-                  <input 
+                  <input
                     type="radio"
                     name="sortBy"
                     value="created"
-                    checked={sortBy === 'created'}
+                    checked={sortBy === "created"}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="w-[20px] h-[20px]"
                   />
                   <span className="text-[#666666]">Data utworzenia</span>
                 </label>
-              </div>
-            </div>
+              </section>
+            </fieldset>
 
-            {/* Action Buttons */}
-            <div className="flex gap-[16px] justify-end pt-[24px] border-t border-[#E0E0E0]">
-              <Button 
-                variant="secondary"
-                onClick={handleReset}
-              >
+            <footer className="flex gap-[16px] justify-end pt-[24px] border-t border-[#E0E0E0]">
+              <Button type="button" variant="secondary" onClick={handleReset}>
                 Resetuj
               </Button>
-              <Button 
-                variant="primary"
-                onClick={handleApply}
-              >
+
+              <Button type="submit" variant="primary">
                 Zastosuj
               </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </footer>
+          </form>
+        </article>
+      </section>
+    </main>
   );
 }

@@ -5,8 +5,6 @@ import { Preferences } from "./Preferences";
 import { Summary } from "./Summary";
 import type { Step1Data, Step2Data } from "../schemas/registrationSchemas";
 
-import "./Form.css";
-
 type FormDataState = {
   step1?: Step1Data;
   step2?: Step2Data;
@@ -29,11 +27,22 @@ export const MultiStepRegistration = () => {
   const [formData, setFormData] = useState<FormDataState>({});
   const [serverEmailError, setServerEmailError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState(
+    "Wyświetlono krok 1 z 3: Dane osobowe",
+  );
 
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     headingRef.current?.focus();
+
+    setStatusMessage(
+      currentStep === 1
+        ? "Wyświetlono krok 1 z 3: Dane osobowe"
+        : currentStep === 2
+          ? "Wyświetlono krok 2 z 3: Preferencje"
+          : "Wyświetlono krok 3 z 3: Podsumowanie i potwierdzenie",
+    );
   }, [currentStep]);
 
   const handleStep1Complete = (data: Step1Data) => {
@@ -61,16 +70,25 @@ export const MultiStepRegistration = () => {
 
   const handleBackToStep1WithEmailError = (message: string) => {
     setServerEmailError(message);
+    setStatusMessage("Adres e-mail jest już zajęty. Wrócono do kroku 1.");
     setCurrentStep(1);
   };
 
   const handleSuccess = () => {
-    setSuccessMessage("Rejestracja zakończona powodzeniem.");
+    const message = "Rejestracja zakończona powodzeniem.";
+
+    setSuccessMessage(message);
+    setStatusMessage(message);
   };
 
   return (
-    <main className="registration-page" aria-label="Formularz rejestracji">
-      <section className="registration-card">
+    <main
+      id="main-content"
+      className="registration-page"
+      aria-labelledby="registration-title"
+      tabIndex={-1}
+    >
+      <section className="registration-card" aria-label="Formularz rejestracji">
         <nav className="registration-steps" aria-label="Postęp rejestracji">
           <ol>
             {steps.map((step) => (
@@ -92,12 +110,16 @@ export const MultiStepRegistration = () => {
           </ol>
         </nav>
 
-        <h2 ref={headingRef} tabIndex={-1}>
+        <h2 id="registration-title" ref={headingRef} tabIndex={-1}>
           {stepTitles[currentStep]}
         </h2>
 
         <p className="required-hint">
           Pola oznaczone gwiazdką (*) są wymagane.
+        </p>
+
+        <p className="visually-hidden" role="status" aria-atomic="true">
+          {statusMessage}
         </p>
 
         {successMessage && (
