@@ -2,7 +2,7 @@
 @import "./typography.css";
 @import "./taskgrid.css";
 @import "./taskcard.css";
-
+@import "./form.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

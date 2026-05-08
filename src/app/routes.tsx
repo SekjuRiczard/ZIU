@@ -4,7 +4,7 @@ import { FilterSort } from "./screens/FilterSort";
 import { TaskDetails } from "./screens/TaskDetails";
 import { Lab4AddTask } from "./screens/Lab4AddTask";
 import { SettingsHiFi } from "./screens/SettingsHiFi";
-
+import { Registration } from "./screens/Registration";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -29,5 +29,9 @@ export const router = createBrowserRouter([
   {
     path: "/settings",
     Component: SettingsHiFi,
+  },
+  {
+    path: "/registration",
+    Component: Registration,
   },
 ]);
