@@ -1,8 +1,6 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { Moon, Plus, Settings, Sun } from "lucide-react";
-
-import { AppLayout } from "../components/layout/AppLayout";
 import { FilterBar } from "../components/todo/FilterBar";
 import { TodoList } from "../components/todo/TodoList";
 import { useTheme } from "../context/ThemeContext";
@@ -23,7 +21,7 @@ export function Lab4Dashboard() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="min-h-screen bg-[var(--color-surface-background)] px-4 py-8 md:px-8 lg:px-12">
         <div className="mx-auto w-full max-w-6xl">
           <header className="mb-8 border-b border-[var(--color-border)] pb-6">
@@ -122,6 +120,6 @@ export function Lab4Dashboard() {
       >
         <Plus size={24} className="md:h-7 md:w-7" aria-hidden="true" />
       </motion.button>
-    </AppLayout>
+    </>
   );
 }
