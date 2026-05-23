@@ -2,7 +2,6 @@
 
 **Projekt:** TodoApp  
 **Standard:** WCAG 2.1 AA  
-**Audytowana strona:** `http://localhost:4173`  
 **Tryb testu:** produkcyjny build aplikacji uruchomiony przez Vite Preview  
 **Narzędzia:** Lighthouse, axe DevTools GUI, pa11y, NVDA, test klawiaturą, WebAIM Contrast Checker
 
