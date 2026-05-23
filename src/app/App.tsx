@@ -7,10 +7,6 @@ export default function App() {
   return (
     <ThemeProvider>
       <TodoProvider>
-        <a href="#main-content" className="skip-link">
-          Przejdź do treści głównej
-        </a>
-
         <RouterProvider router={router} />
       </TodoProvider>
     </ThemeProvider>

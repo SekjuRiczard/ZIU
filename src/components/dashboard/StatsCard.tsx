@@ -1,5 +1,5 @@
-import { Card, CardContent, Typography, Box, Avatar } from '@mui/material';
-import { SvgIconComponent } from '@mui/icons-material';
+import { Card, CardContent, Typography, Box, Avatar } from "@mui/material";
+import { SvgIconComponent } from "@mui/icons-material";
 
 interface StatsCardProps {
   title: string;
@@ -18,7 +18,7 @@ export default function StatsCard({
 }: StatsCardProps) {
   return (
     <Card>
-      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <CardContent sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Avatar sx={{ bgcolor: bgColor, color: color }}>
           <Icon />
         </Avatar>
@@ -26,7 +26,7 @@ export default function StatsCard({
           <Typography variant="body2" color="text.secondary">
             {title}
           </Typography>
-          <Typography variant="h5" fontWeight="bold">
+          <Typography variant="h3" fontWeight="bold">
             {value}
           </Typography>
         </Box>
